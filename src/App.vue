@@ -18,8 +18,8 @@
             <div class="col-md-3">
                 <h4>{{ msg1 }}</h4>
                 <hr>
-                <div class="list-group" v-for="(val, key) in groupList">
-                      <a href="#" class="list-group-item" v-bind:class="{active: key == groupSelected}" v-on:click="changeRepo(key)">{{key}}<span class="badge">{{val}}</span></a>
+                <div class="list-group" v-for="(item, index) in folderInfos">
+                      <a href="#" class="list-group-item" v-bind:class="{active: item.name == groupSelected}" v-on:click="changeRepo(item.name)">{{item.name}}<span class="badge">{{item.count}}</span></a>
                 </div>
             </div>
             <div class="col-md-9">
@@ -45,16 +45,28 @@ export default {
       msg1: 'Repo List',
       msg2: 'Welcome & Enjoy yourself',
       picInfos: [],
-      apiUrl: './assets/pic.json',
+      folderInfos: [],
+      apiUrlPics: './assets/pics.json',
+      apiUrlFolders: './assets/folders.json',
       groupSelected: "test-g1"
     }
   },
   methods: {
       getJsonData: function() {
-			this.$http.get(this.apiUrl)
+			this.$http.get(this.apiUrlPics)
 				.then((response) => {
                     // console.log(response.data);
                     this.picInfos = response.data
+				})
+				.catch(function(response) {
+					console.log(response)
+				})
+      },
+      getGroupJsonData: function() {
+			this.$http.get(this.apiUrlFolders)
+				.then((response) => {
+                    // console.log(response.data);
+                    this.folderInfos = response.data
 				})
 				.catch(function(response) {
 					console.log(response)
@@ -66,23 +78,6 @@ export default {
       }
   },
   computed: {
-    groupList: function() {
-        var temp = [];
-        for (let item of this.picInfos) {
-            if (temp.indexOf(item.folder) == -1) {
-                temp.push(item.folder);
-            }
-        }
-        var res = {};
-        for (let item of this.picInfos) {
-            if (item.folder in res){
-                res[item.folder] += 1
-            } else {
-                res[item.folder] = 1
-            }
-        }
-        return res;
-    },
     selectedPicRepo: function() {
         var temp = [];
         for (let item of this.picInfos) {
@@ -99,6 +94,7 @@ export default {
   mounted: function() {
       // console.log("initial rendering is over");
       this.getJsonData();
+      this.getGroupJsonData();
   }
 }
 </script>
