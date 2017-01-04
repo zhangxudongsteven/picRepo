@@ -45,7 +45,7 @@ export default {
       msg1: 'Repo List',
       msg2: 'Welcome & Enjoy yourself',
       picInfos: [],
-      apiUrl: 'http://oj76szhbv.bkt.clouddn.com/pic.json',
+      apiUrl: './assets/pic.json',
       groupSelected: "test-g1"
     }
   },
